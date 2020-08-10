@@ -3,9 +3,9 @@ import pygame as pg
 
 class Game():
     def __init__(self, name='Game', w=512, h=512):
+        self.objects = []
         self._isRunning = True
         self._screen = None
-        self._objects = []
         self._width = w
         self._height = h
         self._init()
@@ -15,20 +15,21 @@ class Game():
     # initialization, screen etc.
     def _init(self):
         pg.init()
+        pg.font.init()
         size = (self._width, self._height)
-        self.screen = pg.display.set_mode(size)
+        self._screen = pg.display.set_mode(size)
         pg.display.set_icon(pg.image.load('images/game_icon.png'))
 
     # game logic
     def _handleLoop(self):
-        loopHandlers = [o for o in self._objects if callable(getattr(o, 'onLoop', None))]
+        loopHandlers = [o for o in self.objects if callable(getattr(o, 'onLoop', None))]
         for o in loopHandlers:
             loopHandlers.onLoop()
 
 
     # pygame event handling
     def _handleEvents(self):
-        eventHandlers = [o for o in self._objects if callable(getattr(o, 'onEvent', None))]
+        eventHandlers = [o for o in self.objects if callable(getattr(o, 'onEvent', None))]
         for event in pg.event.get():
             # quit
             if event.type == pg.QUIT:
@@ -40,9 +41,9 @@ class Game():
 
     # pygame drawing
     def _handleDraw(self):
-        drawHandlers = [o for o in self._objects if callable(getattr(o, 'onEvent', None))]
+        drawHandlers = [o for o in self.objects if callable(getattr(o, 'onDraw', None))]
         for o in drawHandlers:
-            o.draw(self._screen)
+            o.onDraw(self._screen)
         pg.display.flip()
 
     # user requested exit
