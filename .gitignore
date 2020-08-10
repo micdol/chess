@@ -1,0 +1,9 @@
+
+# remove python cache
+*.pyc
+.__pycache__/*
+
+# remove vscode stuff
+.vscode/*
+launch.json
+settings.json
