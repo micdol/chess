@@ -1,6 +1,7 @@
 import pygame as pg
 import gameObject
 
+
 class Chessboard(gameObject.GameObject):
     files = list(range(ord('a'), ord('h') + 1))
 
@@ -10,7 +11,7 @@ class Chessboard(gameObject.GameObject):
         self.squareSize = (64, 64)  # in pixels
 
     def onDraw(self, screen: pg.Surface):
-        colors = [(238, 238, 210), (118, 150, 86)]
+        colors = [[(238, 238, 210), (118, 150, 86)]]
         w, h = self.squareSize
         i = 0
         r = pg.Rect(0, 0, w, h)

@@ -14,7 +14,7 @@ class AbstractDraggable(ABC):
         self.prevPos = self.currPos = (0, 0)
         self.offset = (0, 0)
         self.eventtypes = [pg.MOUSEBUTTONDOWN,
-                            pg.MOUSEBUTTONUP, pg.MOUSEMOTION]
+                           pg.MOUSEBUTTONUP, pg.MOUSEMOTION]
 
     def handleDrag(self, event: pg.event):
         # event not relevant for drag purposes
@@ -29,7 +29,7 @@ class AbstractDraggable(ABC):
         if not self.isDragging and event.type == pg.MOUSEBUTTONDOWN and self.dragRect.collidepoint(event.pos):
             event.handled = True
             self.prevPos = self.currPos = event.pos
-            self.onDrag()    
+            self.onDrag()
         elif self.isDragging:
             event.handled = True
             self.prevPos = self.currPos
