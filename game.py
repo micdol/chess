@@ -2,58 +2,62 @@ import pygame as pg
 
 
 class Game():
-    def __init__(self, name='Game', w=512, h=512):
-        self.objects = []
-        self._isRunning = True
-        self._screen = None
-        self._width = w
-        self._height = h
-        self._init()
+    def __init__(self, name='Game', w=512, h=512, fps=60):
+        self.gameObjects = []
+        self.isRunning = True
+        self.screen = None
+        self.width = w
+        self.height = h
+        self.time = 0
+        self.fps = fps
+        self.clock = pg.time.Clock()
+        self.init()
         pg.display.set_caption(name)
-        
 
     # initialization, screen etc.
-    def _init(self):
+
+    def init(self):
         pg.init()
         pg.font.init()
-        size = (self._width, self._height)
-        self._screen = pg.display.set_mode(size)
+        size = (self.width, self.height)
+        self.screen = pg.display.set_mode(size)
         pg.display.set_icon(pg.image.load('images/game_icon.png'))
 
     # game logic
-    def _handleLoop(self):
-        loopHandlers = [o for o in self.objects if callable(getattr(o, 'onLoop', None))]
-        for o in loopHandlers:
-            loopHandlers.onLoop()
-
+    def handleLoop(self):
+        ticks = pg.time.get_ticks()
+        elapsed = ticks - self.time
+        for o in self.gameObjects:
+            o.onLoop(elapsed)
+        self.time = ticks
 
     # pygame event handling
-    def _handleEvents(self):
-        eventHandlers = [o for o in self.objects if callable(getattr(o, 'onEvent', None))]
+
+    def handleEvents(self):
         for event in pg.event.get():
             # quit
             if event.type == pg.QUIT:
-                self._isRunning = False
+                self.isRunning = False
             # others...
-            for o in eventHandlers:
+            for o in self.gameObjects:
                 o.onEvent(event)
 
-
     # pygame drawing
-    def _handleDraw(self):
-        drawHandlers = [o for o in self.objects if callable(getattr(o, 'onDraw', None))]
-        for o in drawHandlers:
-            o.onDraw(self._screen)
+
+    def handleDraw(self):
+        for o in self.gameObjects:
+            o.onDraw(self.screen)
         pg.display.flip()
 
     # user requested exit
-    def _cleanup(self):
+    def cleanup(self):
         pg.quit()
 
     # starts game and keeps it running
     def run(self):
-        while self._isRunning:
-            self._handleLoop()
-            self._handleEvents()
-            self._handleDraw()
-        self._cleanup()
+        while self.isRunning:
+            self.handleLoop()
+            self.handleEvents()
+            self.handleDraw()
+            self.clock.tick(self.fps)
+        self.cleanup()

@@ -1,8 +1,8 @@
 import pygame as pg
+import gameObject
 
-
-class Chessboard():
-    _files = list(range(ord('a'), ord('h') + 1))
+class Chessboard(gameObject.GameObject):
+    files = list(range(ord('a'), ord('h') + 1))
 
     def __init__(self):
         self.rows = 8
@@ -37,4 +37,4 @@ class Chessboard():
         else:
             x = args[0]
             y = args[1]
-        return f'{chr(Chessboard._files[x])}{y+1}'
+        return f'{chr(Chessboard.files[x])}{y+1}'
